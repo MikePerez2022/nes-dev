@@ -9765,6 +9765,30 @@
     "Items": [
       {
         "RomFile": {
+          "Path": "C:\\Users\\Mike\\Desktop\\Projx\\nes-dev\\projects\\src/game.nes",
+          "InnerFile": "",
+          "InnerFileIndex": 0
+        },
+        "PatchFile": null
+      },
+      {
+        "RomFile": {
+          "Path": "C:\\Users\\Mike\\Desktop\\Projx\\nes-dev\\projects\\src/controller.nes",
+          "InnerFile": "",
+          "InnerFileIndex": 0
+        },
+        "PatchFile": null
+      },
+      {
+        "RomFile": {
+          "Path": "C:\\Users\\Mike\\Desktop\\Projx\\nes-dev\\projects\\src/startup.nes",
+          "InnerFile": "",
+          "InnerFileIndex": 0
+        },
+        "PatchFile": null
+      },
+      {
+        "RomFile": {
           "Path": "C:\\Users\\Mike\\Desktop\\Projx\\nes-dev\\projects\\src/sprites.nes",
           "InnerFile": "",
           "InnerFileIndex": 0
@@ -9774,14 +9798,6 @@
       {
         "RomFile": {
           "Path": "C:\\Users\\Mike\\Desktop\\Projx\\nes-dev\\projects\\src/background.nes",
-          "InnerFile": "",
-          "InnerFileIndex": 0
-        },
-        "PatchFile": null
-      },
-      {
-        "RomFile": {
-          "Path": "C:\\Users\\Mike\\Desktop\\Projx\\nes-dev\\projects\\src/startup.nes",
           "InnerFile": "",
           "InnerFileIndex": 0
         },
