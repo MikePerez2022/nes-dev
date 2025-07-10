@@ -43,7 +43,7 @@ INES_MAPPER = 0 ; 0 = NROM
 INES_MIRROR = 0 ; 0 = horizontal mirroring, 1 = vertical mirroring
 INES_SRAM   = 0 ; 1 = battery backed SRAM at $6000-7FFF
 
-.byte 'N', 'E', 'S', $1A ; ID 
+.byte 'N', 'E', 'S', $1A ; ID
 .byte $02 ; 16k PRG bank count
 .byte $01 ; 8k CHR bank count
 .byte INES_MIRROR | (INES_SRAM << 1) | ((INES_MAPPER & $f) << 4)
@@ -72,7 +72,7 @@ INES_SRAM   = 0 ; 1 = battery backed SRAM at $6000-7FFF
 
 .segment "ZEROPAGE"
 
-nmi_ready:		.res 1 ; set to 1 to push a PPU frame update, 
+nmi_ready:		.res 1 ; set to 1 to push a PPU frame update,
 					   ;        2 to turn rendering off next NMI
 gamepad:		.res 1 ; stores the current gamepad values
 
@@ -172,7 +172,7 @@ clear_oam:
 wait_vblank2:
 	bit PPU_STATUS
 	bpl wait_vblank2
-	
+
 	; NES is initialized and ready to begin
 	; - enable the NMI for graphical updates and jump to our main program
 	lda #%10001000
@@ -214,7 +214,7 @@ cont_render:
 
 	; transfer current palette to PPU
 	lda #%10001000 ; set horizontal nametable increment
-	sta PPU_CONTROL 
+	sta PPU_CONTROL
 	lda PPU_STATUS
 	lda #$3F ; set PPU address to $3F00
 	sta PPU_VRAM_ADDRESS2
