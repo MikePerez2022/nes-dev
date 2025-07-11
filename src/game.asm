@@ -15,7 +15,7 @@ SPRITE_BALL_ADDR = oam + 16
 .byte 'N', 'E', 'S', $1a      ; "NES" followed by MS-DOS EOF marker
 .byte $02                     ; 2 x 16KB PRG-ROM banks
 .byte $01                     ; 1 x 8KB CHR-ROM bank
-.byte $00, $00                ; Mapper 0, no special features
+.byte $01, $00                ; Mapper 0, no special features
 
 ;*****************************************************************
 ; Define NES interrupt vectors
@@ -96,6 +96,29 @@ oam: .res 256	; sprite OAM data
 
 ; Non-Maskable Interrupt Handler - called during VBlank
 .proc nmi_handler
+  ; save registers
+  PHA
+  TXA
+  PHA
+  TYA
+  PHA
+
+  INC time        ; incement time by 1
+  LDA time        ; load time into accumulator
+  CMP #60         ; check if time is 60
+  BNE skip        ; if not 60, skip
+    INC seconds   ; increment seconds by 1
+    LDA #0        ; reset time to 0
+    STA time
+  skip:
+
+
+  ; restore registers
+  PLA
+  TAY
+  PLA
+  TAX
+  PLA
 
   RTI                     ; Return from interrupt (not using NMI yet)
 .endproc
@@ -203,18 +226,17 @@ text_loop:
 .endproc
 
 .proc init_sprites
+
+  LDX #0
+  load_sprite:
+    LDA sprite_data, X
+    ; y, index, attrib, x
+    STA SPRITE_0_ADDR, X
+    INX
+    CPX #4
+    BNE load_sprite
+
   ; set sprite tiles
-  LDA #128
-  STA ball_x
-  LDA #100
-  STA ball_y
-
-  LDA #1
-  STA ball_dx
-  LDA #1
-  STA ball_dy
-
-
   LDA #1
   STA SPRITE_0_ADDR + SPRITE_OFFSET_TILE
   LDA #2
@@ -231,6 +253,17 @@ text_loop:
 
   LDA #30
   STA player_x
+
+  ;ball sprite
+  LDA #128
+  STA ball_x
+  LDA #100
+  STA ball_y
+
+  LDA #1
+  STA ball_dx
+  LDA #1
+  STA ball_dy
 
   RTS
 .endproc
@@ -273,8 +306,10 @@ text_loop:
 
   ;INC scroll
   ;LDA scroll
-  STA PPU_SCROLL                         ; Write horizontal scroll
   LDA #$00
+  STA PPU_SCROLL                         ; Write horizontal scroll
+  DEC scroll
+  LDA scroll
   STA PPU_SCROLL                         ; Write vertical scroll
 
   ; Set OAM address to 0 — required before DMA or manual OAM writes
@@ -501,6 +536,11 @@ palette_data:
 ; Load nametable data
 nametable_data:
   .incbin "assets/screen.nam"
+sprite_data:
+.byte 30, 1, 0, 40
+.byte 30, 2, 0, 48
+.byte 38, 3, 0, 40
+.byte 38, 4, 0, 48
 
 hello_txt:
 .byte 'H','E','L','L','O',' ',' ','W','O','R','L','D', 0
