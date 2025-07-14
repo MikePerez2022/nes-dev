@@ -9773,6 +9773,14 @@
       },
       {
         "RomFile": {
+          "Path": "C:\\Users\\Mike\\Desktop\\Projx\\nes-dev\\projects\\src/pong.nes",
+          "InnerFile": "",
+          "InnerFileIndex": 0
+        },
+        "PatchFile": null
+      },
+      {
+        "RomFile": {
           "Path": "C:\\Users\\Mike\\Desktop\\Projx\\nes-dev\\projects\\src/controller.nes",
           "InnerFile": "",
           "InnerFileIndex": 0

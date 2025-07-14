@@ -395,8 +395,7 @@ NOT_HITLEFT:
   	sta ball_dx
 NOT_HITRIGHT:
 
-;Collision with the player
-; Check X overlap
+;Check collision with the player
   LDA ball_x
   CLC
   ADC #7           ; ball right edge
@@ -409,7 +408,6 @@ NOT_HITRIGHT:
   CMP ball_x
   BCC done ; player right is left of ball left
 
-; -- Check Y overlap
   LDA ball_y
   CLC
   ADC #7           ; ball bottom
@@ -422,21 +420,15 @@ NOT_HITRIGHT:
   CMP ball_y
   BCC done ; player below ball
 
-; Is the ball hitting the side?
-LDA ball_x
-CLC
-ADC #7
-CMP player_x
-JMP collision_X ; ball right edge left of player
+; Determine type of collision
+  LDA ball_x
+  SEC
+  SBC player_x
+  CMP #8         ; if difference is less than 8 pixels, it's vertical hit
+  BCC collision_Y ; ball_x is close horizontally
 
-LDA player_x
-CLC
-ADC #15
-CMP ball_x
-JMP collision_X ; ball left edge right of player
-
-; Else, must be top or bottom
-JMP collision_Y
+  ; Otherwise, side hit
+  JMP collision_X
 
 ; If ball hits sprite sides
 collision_X:
@@ -459,13 +451,7 @@ collision_Y:
   JMP done
 
 done:
-  lda ball_y ; get the current Y
-	clc
-	SEC
-  SBC #2
-  sta ball_y ; write the change
   RTS
-
 .endproc
 
 ;******************************************************************************
