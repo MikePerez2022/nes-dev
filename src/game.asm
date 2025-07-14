@@ -395,7 +395,7 @@ NOT_HITLEFT:
   	sta ball_dx
 NOT_HITRIGHT:
 
-;Check collision with the player
+;Check if there is any type of collision with the player using AABB method
   LDA ball_x
   CLC
   ADC #7           ; ball right edge
@@ -420,29 +420,28 @@ NOT_HITRIGHT:
   CMP ball_y
   BCC done ; player below ball
 
-; Determine type of collision
+
+; Find out the type of collision
   LDA ball_x
   SEC
   SBC player_x
-  CMP #8         ; if difference is less than 8 pixels, it's vertical hit
-  BCC collision_Y ; ball_x is close horizontally
+  CMP #8         ; if this is less than 8 pixels, it's a vertical hit
+  BCC collision_Y ; If it is set the appropriate flag
 
-  ; Otherwise, side hit
+  ; Otherwise jump to the collision for a side hit
   JMP collision_X
 
-; If ball hits sprite sides
+; If ball hits sprite sides then reverse X velocity
 collision_X:
-  ; Reverse X velocity
   LDA ball_dx
-  EOR #$FF
+  EOR #$FF ; Flip the bits
   CLC
-  ADC #1
+  ADC #1   ; add 1
   STA ball_dx
   JMP done
 
-; If ball hits sprites top / bottom
+; If ball hits sprites top/bottom then reverse Y velocity
 collision_Y:
-  ; Reverse Y velocity
   LDA ball_dy
   EOR #$FF
   CLC
