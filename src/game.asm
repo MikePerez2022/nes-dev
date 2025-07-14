@@ -5,7 +5,7 @@ SPRITE_0_ADDR = oam + 0
 SPRITE_1_ADDR = oam + 4
 SPRITE_2_ADDR = oam + 8
 SPRITE_3_ADDR = oam + 12
-SPRITE_BALL_ADDR = oam + 16
+SPRITE_BALL1_ADDR = oam + 16
 
 ;*****************************************************************
 ; Define NES cartridge Header
@@ -246,7 +246,7 @@ text_loop:
   LDA #4
   STA SPRITE_3_ADDR + SPRITE_OFFSET_TILE
   LDA #5
-  STA SPRITE_BALL_ADDR + SPRITE_OFFSET_TILE
+  STA SPRITE_BALL1_ADDR + SPRITE_OFFSET_TILE
 
   LDA #20
   STA player_y
@@ -283,10 +283,10 @@ text_loop:
   ; Update OAM values
   ; BALL SPRITE POSITIONING
   LDA ball_y
-  STA SPRITE_BALL_ADDR + SPRITE_OFFSET_Y
+  STA SPRITE_BALL1_ADDR + SPRITE_OFFSET_Y
 
   LDA ball_x
-  STA SPRITE_BALL_ADDR + SPRITE_OFFSET_X
+  STA SPRITE_BALL1_ADDR + SPRITE_OFFSET_X
 
   LDA player_x
   STA SPRITE_0_ADDR + SPRITE_OFFSET_X
@@ -394,7 +394,78 @@ NOT_HITLEFT:
   	lda #$FF ; reverse direction (-1)
   	sta ball_dx
 NOT_HITRIGHT:
+
+;Collision with the player
+; Check X overlap
+  LDA ball_x
+  CLC
+  ADC #7           ; ball right edge
+  CMP player_x
+  BCC done ; ball right is left of player left
+
+  LDA player_x
+  CLC
+  ADC #15          ; player right edge
+  CMP ball_x
+  BCC done ; player right is left of ball left
+
+; -- Check Y overlap
+  LDA ball_y
+  CLC
+  ADC #7           ; ball bottom
+  CMP player_y
+  BCC done ; ball below top
+
+  LDA player_y
+  CLC
+  ADC #15          ; player bottom
+  CMP ball_y
+  BCC done ; player below ball
+
+; Is the ball hitting the side?
+LDA ball_x
+CLC
+ADC #7
+CMP player_x
+JMP collision_X ; ball right edge left of player
+
+LDA player_x
+CLC
+ADC #15
+CMP ball_x
+JMP collision_X ; ball left edge right of player
+
+; Else, must be top or bottom
+JMP collision_Y
+
+; If ball hits sprite sides
+collision_X:
+  ; Reverse X velocity
+  LDA ball_dx
+  EOR #$FF
+  CLC
+  ADC #1
+  STA ball_dx
+  JMP done
+
+; If ball hits sprites top / bottom
+collision_Y:
+  ; Reverse Y velocity
+  LDA ball_dy
+  EOR #$FF
+  CLC
+  ADC #1
+  STA ball_dy
+  JMP done
+
+done:
+  lda ball_y ; get the current Y
+	clc
+	SEC
+  SBC #2
+  sta ball_y ; write the change
   RTS
+
 .endproc
 
 ;******************************************************************************
